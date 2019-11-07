@@ -1,5 +1,12 @@
 .. title:: Calm Linux – Applications Deep Dive
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Appendix
+  :name: _appendix
+  :hidden:
+
+  index
 
 .. toctree::
   :maxdepth: 2
