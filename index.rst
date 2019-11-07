@@ -1,5 +1,12 @@
 .. title:: Calm Linux – Applications Deep Dive
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Calm
+  :name: _calm
+  :hidden:
+
+  index
 
 .. toctree::
   :maxdepth: 2
@@ -744,7 +751,6 @@ What are the key things you should know about **Nutanix Calm**?
 - Dependencies between services can be easily modeled in the Blueprint Editor.
 
 - Users can quickly provision entire application stacks for production or testing for repeatable results without time lost to manual configuration.
-
 
 .. |proj-icon| image:: images/projects_icon.png
 .. |mktmgr-icon| image:: images/marketplacemanager_icon.png
