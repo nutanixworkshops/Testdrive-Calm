@@ -14,9 +14,9 @@
   :name: _appendix
   :hidden:
 
----------------------
-Calm Linux – Applications Deep Dive
----------------------
+---------------------------------------
+Calm - Applications Deep Dive
+---------------------------------------
 
 *The estimated time to complete this lab is 60 minutes.*
 
@@ -25,23 +25,42 @@ Overview
 
 Nutanix Calm allows you to seamlessly select, provision, and manage your business applications across your infrastructure for both the private and public clouds. Nutanix Calm provides App lifecycle, monitoring and remediation to manage your heterogeneous infrastructure, for example, VMs or bare-metal servers. Nutanix Calm supports multiple platforms so that you can use the single self-service and automation interface to manage all your infrastructure.
 
-**In this lab you will explore the basics of Nutanix Calm by building and deploying a blueprint that installs and configures a multi-tier Task Manager web app using MySQL, nginix, and HAProxy.**
+**In this lab you will build and deploy a Calm blueprint from scratch. The blueprint will install and configure a multi-tier Task Manager web app using MySQL, PHP, nginx, and HAProxy.**
+
+Calm UI Overview
+++++++++++++++++
+
+#. From the Prism Central Dashboard click on :fa:`bars` **> Services > Calm**.
+
+   On the left hand side, there are several icons.
+
+   .. figure:: images/01_calm_ui_overview.png
+
+
+- **Marketplace** - The Marketplace tab allows you to launch pre-seeded applications.
+- **Applications** - The Applications tab is where you manage the applications that were launched from blueprints.
+- **Library** - The Library tab allows you to create and use variable types and tasks, which can be used while configuring a blueprint.
+- **Settings** - The Settings tab allows you to enable or disable pre-seeded blueprints and configure various providers, including public cloud providers.
+- **Marketplace Manager**  - The Marketplace Manager tab is where admins can manage the configured and pre-seeded blueprints.
+- **Projects** - The Projects tab is where you configure users and projects. A project is a set of Active Directory users with a common set of requirements. A project specifies the roles, available networks, and infrastructure that can be used.
 
 Creating A Project
 ++++++++++++++++++
 
 Projects are the logical construct that integrate Calm with Nutanix's native Self-Service Portal (SSP) capabilities, allowing an administrator to assign both infrastructure resources and the roles/permissions of Active Directory users/groups to specific Blueprints and Applications.
 
-#. Within the Calm UI, Select |proj-icon| **Projects** from the sidebar.
+#. Within the Calm UI, Select the |proj-icon| **Projects** icon from the sidebar.
 
-   .. figure:: images/510projects1.png
+   .. figure:: images/02_calm_project_icon.png
 
 #. Click + Create Project
 
 #. Fill out the following fields:
 
-   - **Project Name** - *initials*-Calm
-   - **Description** - *initials*-Calm
+   - **Project Name** - MyProject
+   - **Description** - My Project
+
+   .. figure:: images/03_calm_project_name.png
 
 #. Under **Users, Groups, and Roles**, click **+ User**.
 
@@ -65,23 +84,19 @@ Projects are the logical construct that integrate Calm with Nutanix's native Sel
    - **Name** - SSP Basic Users
    - **Role** - Operator
 
-   .. figure:: images/projects_name_users.png
+   .. figure:: images/04_calm_configure_users.png
 
 #. Under **Infrastructure**, click the blue **Select Provider** button, and then **Nutanix**.
 
-#. In the box that appears, click the white **Select Clusters & Subnets** button, and in the pop-up, select your AHV cluster.  Once your cluster is selected, choose the **Primary** network, and if available, the **Secondary** network, and click **Confirm**.
+   .. figure:: images/05_calm_provider.png
 
-   .. figure:: images/projects_cluster_subnet_selection.png
+#. In the box that appears, click the white **Select Clusters & Subnets** button, and in the pop-up, select your AHV cluster.  Once your cluster is selected, choose the **default-net** network and click **Confirm**.
 
-#. Within the **Selected Subnets** table, select :fa:`star` for the **Primary** network to make it the default virtual network for VMs in the **Calm** project.
-
-   .. figure:: images/projects_infrastructure.png
+   .. figure:: images/06_calm_subnets.png
 
 #. Click **Save**.
 
-.. note::
-
-  Click `here <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Calm-Admin-Operations-Guide-v56:nuc-roles-responsibility-matrix-c.html>`_ to view the complete matrix of default SSP roles and associated permissions.
+   Click `here <https://portal.nutanix.com/#/page/docs/details?targetId=Nutanix-Calm-Admin-Operations-Guide-v56:nuc-roles-responsibility-matrix-c.html>`_ to view the complete matrix of default SSP roles and associated permissions.
 
 Creating a Blueprint
 ++++++++++++++++++++
@@ -90,11 +105,7 @@ A blueprint is the framework for every application that you model by using Nutan
 
 You can use blueprints to model the applications of various complexities; from simply provisioning a single virtual machine to provisioning and managing a multi-node, multi-tier application.
 
-#. In **Prism Central**, select :fa:`bars` **> Services > Calm**.
-
-   .. figure:: images/1.png
-
-#. Select |blueprints| **Blueprints** in the left hand toolbar to view and manage Calm bleuprints.
+#. From the Calm UI, click the |blueprints| **Blueprints** icon in the left hand toolbar to view and manage Calm blueprints.
 
    .. note::
 
@@ -104,11 +115,11 @@ You can use blueprints to model the applications of various complexities; from s
 
 #. Fill out the following fields:
 
-   - **Name** - *Initials*-CalmLinuxIntro
+   - **Name** - CalmLinuxIntro
    - **Description** - [Task Manager Application](\http://@@{HAProxy.address}@@/)
-   - **Project** - *Initials*-Calm
+   - **Project** - MyProject
 
-   .. figure:: images/2.png
+   .. figure:: images/07_calm_blueprint_setup.png
 
 #. Click **Proceed** to launch the Blueprint Editor.
 
@@ -166,6 +177,8 @@ This exercise uses a "Generic Cloud" CentOS image. This is a common option for m
 
 #. Click **Save**, and then **Back**.
 
+.. note:: The **Save** button is located on the top toolbar.
+
 Defining Variables
 ++++++++++++++++++
 
@@ -206,12 +219,12 @@ VMs in AHV can be deployed based on a disk image. With Calm, you can select a Do
    - **Image Name** - CentOS_7_Cloud
    - **Image Type** - Disk Image
    - **Architecture** - X86_64
-   - **Source URI** - http://download.nutanix.com/calm/CentOS-7-x86_64-GenericCloud.qcow2
+   - **Source URI** - http://download.nutanix.com/calm/CentOS-7-x86_64-1810.qcow2
    - **Product Name** - CentOS
    - **Product Version** - 7
 
    .. note::
-      This Generic Cloud image is the same that's used for the majority of the Nutanix Pre-Seeded Application Blueprints.
+      This image is the same that's used for the majority of the Nutanix Pre-Seeded Application Blueprints.
 
    .. figure:: images/6.png
 
@@ -227,13 +240,15 @@ In this exercise you will create the database, webserver, and load balancer serv
 Creating the Database Service
 .............................
 
-#. In **Application Overview > Services**, click :fa:`plus-circle` to add a new Service.
+#. In **Layers Overview > Services**, click :fa:`plus-circle` to add a new Service.
 
-   By default, the Application Overview is located in the lower right-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
+   By default, the Layers Overview window is located in the lower left-hand corner of the Blueprint Editor and is used to create and manage Blueprint layers such as Services, Application Profiles, and Actions.
 
    .. figure:: images/7.png
 
-   Note **Service1** appears in the **Workspace** and the **Configuration Pane** reflects the configuration of the selected Service.
+   .. note:: Clicking on the |maximize| icon in the top bar of the Layers Overview window will expand the window for greater visibility.
+
+   Note **Service1** appears in the **Workspace**, and the **Configuration Pane** reflects the configuration of the selected Service.
 
 #. Fill out the following fields:
 
@@ -257,7 +272,7 @@ Creating the Database Service
    - Select **Bootable**
    - **vCPUs** - 2
    - **Cores per vCPU** - 1
-   - **Memory (GiB)** - 4
+   - **Memory (GiB)** - 2
    - Select **Guest Customization**
 
      - **Type** - Cloud-init
@@ -277,7 +292,7 @@ Creating the Database Service
          When using an SSH Private Key Credential, Calm is able to decode that private key into the matching public key, and makes the decoded value accessable via the @@{Credential_Name.public_key}@@ macro. Cloud-Init is then leveraged to populate the SSH public key value as an authorized key, allowing for the corresponding private key to be used to authenticate to the host.
 
    - Select :fa:`plus-circle` under **Network Adapters (NICs)**
-   - **NIC 1** - Primary
+   - **NIC 1** - default-net
    - **Credential** - CENTOS
 
 #. Click **Save**.
@@ -290,7 +305,7 @@ Creating the Database Service
 
    Now that you have completed the deployment details for the VM associated with the service, the next step is to tell Calm how the application will be installed on the VM.
 
-#. With the **MySQL** service icon selected in the Workspace pane, scroll to the top of the **Configuration Panel**, and select the **Package** tab.
+#. With the **MySQL** service icon selected in the Workspace pane, scroll to the top of the **Configuration Pane**, and select the **Package** tab.
 
    The Package is the configuration and application(s) installed on the Service, and is typically accomplished by executing a script on the Service VM.
 
@@ -302,7 +317,7 @@ Creating the Database Service
 
    Note the **Package install** field that appears on the MySQL service in the Workspace pane.
 
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel** to define the script that Calm will remotely execute on the MySQL Service VM:
+#. Select **+ Task**, and fill out the following fields in the **Configuration Pane** to define the script that Calm will remotely execute on the MySQL Service VM:
 
    - **Task Name** - Install_sql
    - **Type** - Execute
@@ -351,11 +366,11 @@ Creating the Database Service
 
    Reviewing the script you can see the package will install MySQL, configure the credentials and create a database based on the variables specified earlier in the exercise.
 
-#. Select the **MySQL** service icon in the Workspace pane again, select the **Package** tab in the **Configuration Panel**.
+#. Select the **MySQL** service icon in the Workspace pane, and select the **Package** tab in the **Configuration Pane**.
 
 #. Click **Configure uninstall**.
 
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
+#. Select **+ Task**, and fill out the following fields in the **Configuration Pane**:
 
    - **Task Name** - Uninstall_sql
    - **Type** - Execute
@@ -382,7 +397,7 @@ You will now follow similar steps to define a web server service.
 
 #. In **Application Overview > Services**, add an additional service.
 
-#. Select the new service and fill out the following **VM** fields in the **Configuration Panel**:
+#. Select the new service and fill out the following **VM** fields in the **Configuration Pane**:
 
    - **Service Name** - WebServer
    - **Name** - WebServerAHV
@@ -395,7 +410,7 @@ You will now follow similar steps to define a web server service.
    - Select **Bootable**
    - **vCPUs** - 2
    - **Cores per vCPU** - 1
-   - **Memory (GiB)** - 4
+   - **Memory (GiB)** - 2
    - Select **Guest Customization**
 
      - **Type** - Cloud-init
@@ -411,7 +426,7 @@ You will now follow similar steps to define a web server service.
              sudo: ['ALL=(ALL) NOPASSWD:ALL']
 
    - Select :fa:`plus-circle` under **Network Adapters (NICs)**
-   - **NIC 1** - Primary
+   - **NIC 1** - default-net
    - **Credential** - CENTOS
 
 #. Select the **Package** tab.
@@ -420,7 +435,7 @@ You will now follow similar steps to define a web server service.
 
    - **Package Name** - WebServer_PACKAGE
 
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
+#. Select **+ Task**, and fill out the following fields in the **Configuration Pane**:
 
    - **Name Task** - Install_WebServer
    - **Type** - Execute
@@ -496,9 +511,11 @@ You will now follow similar steps to define a web server service.
    This script installs PHP and Nginx to create a web server, and then a Laravel based web application.
    It then configures the web application settings, including updating the **DB_HOST** with the MySQL IP address, accessed via the **@@{MySQL.address}@@** macro.
 
-#. Select the **Package** tab and click **Configure uninstall**.
+#. Select the **WebServer** service icon in the Workspace pane, and select the **Package** tab in the **Configuration Pane**.
 
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
+#. Click **Configure uninstall**.
+
+#. Select **+ Task**, and fill out the following fields in the **Configuration Pane**:
 
    - **Name Task** - Uninstall_WebServer
    - **Type** - Execute
@@ -516,7 +533,7 @@ You will now follow similar steps to define a web server service.
 
    For many applications it is common to need to scale out a given service, such as the web tier in order to handle more concurrent users. Calm makes it simple to turn deploy an array containing multiple copies of a given service.
 
-#. With the **WebServer** service icon selected in the Workspace pane, scroll to the top of the **Configuration Panel**, and select the **Service** tab.
+#. Scroll to the top of the **Configuration Pane**, and select the **Service** tab.
 
 #. Under **Deployment Config > Number of Replicas**, increase the **Min** value from 1 to 2 and the **Max** value from 1 to 4.
 
@@ -539,7 +556,7 @@ To take advantage of a scale out web tier, your application needs to be able to 
 
 #. In **Application Overview > Services**, add an additional service.
 
-#. Select the new service and fill out the following **VM** fields in the **Configuration Panel**:
+#. Select the new service and fill out the following **VM** fields in the **Configuration Pane**:
 
    - **Service Name** - HAProxy
    - **Name** - HAProxyAHV
@@ -552,7 +569,7 @@ To take advantage of a scale out web tier, your application needs to be able to 
    - Select **Bootable**
    - **vCPUs** - 2
    - **Cores per vCPU** - 1
-   - **Memory (GiB)** - 4
+   - **Memory (GiB)** - 2
    - Select **Guest Customization**
 
      - **Type** - Cloud-init
@@ -568,16 +585,16 @@ To take advantage of a scale out web tier, your application needs to be able to 
              sudo: ['ALL=(ALL) NOPASSWD:ALL']
 
    - Select :fa:`plus-circle` under **Network Adapters (NICs)**
-   - **NIC 1** - Primary
+   - **NIC 1** - default-net
    - **Credential** - CENTOS
 
-#. Select the **Package** tab.
+#. Scroll to the top of the **Configuration Pane**, and select the **Package** tab.
 
 #. Specify a **Package Name** and click **Configure install**.
 
    - **Package Name** - HAProxy_PACKAGE
 
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
+#. Select **+ Task**, and fill out the following fields in the **Configuration Pane**:
 
    - **Name Task** - Install_HAProxy
    - **Type** - Execute
@@ -639,9 +656,11 @@ To take advantage of a scale out web tier, your application needs to be able to 
 
    Note the use of the @@{WebServer.address}@@ macro in the script above. The macro returns a comma delimited list of all IPs of the VMs within that service. The script then uses the `tr <https://www.geeksforgeeks.org/tr-command-unixlinux-examples/>`_ command to replace commas with carriage returns. The result is an array, **$hosts**, containing strings of all WebServer IP addresses. Those addresses are then each added to the **HAProxy** configuration file.
 
-#. Select the **Package** tab and click **Configure uninstall**.
+#. Select the **HAProxy** service icon in the Workspace pane, and select the **Package** tab in the **Configuration Pane**.
 
-#. Select **+ Task**, and fill out the following fields in the **Configuration Panel**:
+#. Click **Configure uninstall**.
+
+#. Select **+ Task**, and fill out the following fields in the **Configuration Pane**:
 
    - **Name Task** - Uninstall_HAProxy
    - **Type** - Execute
@@ -654,8 +673,7 @@ To take advantage of a scale out web tier, your application needs to be able to 
        #!/bin/bash
        set -ex
 
-       sudo
-       yum -y erase haproxy
+       sudo yum -y erase haproxy
 
 #. Click **Save**.
 
@@ -703,7 +721,7 @@ Launching and Managing the Application
 
 #. From the upper toolbar in the Blueprint Editor, click **Launch**.
 
-#. Specify a unique **Application Name** (e.g. *Initials*\ -CalmLinuxIntro1) and your **User_initials** Runtime variable value for VM naming.
+#. Specify a unique **Application Name** (e.g. CalmLinuxIntro1) and your **User_initials** Runtime variable value for VM naming.
 
 #. Click **Create**.
 
@@ -713,11 +731,17 @@ Launching and Managing the Application
 
 #. Once the application reaches a **Running** status, navigate to the **Services** tab and select the **HAProxy** service to determine the IP address of your load balancer.
 
-#. In a new browser tab or window, navigate to \http://<HAProxy-IP>, and verify your Task Manager application is functioning.
+#. Navigate to :fa:`bars` **> Virtual Infrastructure > VMs**
 
-   .. note::
+#. Check the box next to the **UbuntuDesktop1604** VM.
 
-     You can also click the link in the Description of the Application.
+#. From the Actions drop-down menu, Select **Launch Console**.
+
+   .. figure:: images/vm_launch_console.png
+
+#. From within the **UbuntuDesktop1604** desktop, launch Firefox.
+
+#. Navigate to \http://<HAProxy-IP>, and verify your Task Manager application is functioning.
 
    .. figure:: images/17.png
 
@@ -730,32 +754,11 @@ What are the key things you should know about **Nutanix Calm**?
 
 - Calm blueprints are easy to use.  In 60 minutes you went from nothing to a full infrastructure stack deployment.  Because Calm uses standard tools for configuration - bash, PowerShell, Python, etc. - there's no new language to learn and you can immediately apply skills and code you already have.
 
-- While not as visually impressive, even single VM blueprints can have a massive effect on customers.  One bank in India is using Calm for single-VM deployments, reducing the time to deploy these applications from 3 days to 2 hours.  Remember that many customers have little or no automation today (or the automation they have is complex/hard to understand thus limiting it's adoption).  This means that Calm can help them right now, today, instantly.
-
-- "Multi-Cloud Application Automation and Lifecycle Management" sounds big and scary.  The 'future' sounds amazing, but many operators can't see the path to there.  Listen to what the customer is struggling with today (backups require specialized skills, VM deployment takes a long time, upgrades are hard) and speak to how Calm can help with that; jumping right to the multi-cloud automation story pushes Calm from a "I need this right now" to a "well let's evaluate this later on, once things have quieted down" (and things never truly 'quiet down'.
-
-- The Blueprint Editor provides a simple UI for modeling potentially complex applications.
-
-- Blueprints are tied to SSP Projects which can be used to enforce quotas and role based access control.
-
-- Having a Blueprint install and configure binaries means no longer creating specific images for individual applications. Instead the application can be modified through changes to the Blueprint or installation script, both of which can be stored in source code repositories.
-
-- Variables allow another dimension of customizing an application without having to edit the underlying Blueprint.
-
-- There are multiple ways of authenticating to a VM (keys or passwords), which is dependent upon the source image.
-
-- Application status can be monitored in real time.
-
-- Applications typically span across multiple VMs, each responsible for different services. Calm is capable of automated and orchestrating full applications.
-
-- Dependencies between services can be easily modeled in the Blueprint Editor.
-
-- Users can quickly provision entire application stacks for production or testing for repeatable results without time lost to manual configuration.
-
-.. |proj-icon| image:: images/projects_icon.png
+.. |proj-icon| image:: images/projects.png
 .. |mktmgr-icon| image:: images/marketplacemanager_icon.png
 .. |mkt-icon| image:: images/marketplace_icon.png
 .. |bp-icon| image:: images/blueprints_icon.png
 .. |blueprints| image:: images/blueprints.png
 .. |applications| image:: images/blueprints.png
 .. |projects| image:: images/projects.png
+.. |maximize| image:: images/maximize.png
