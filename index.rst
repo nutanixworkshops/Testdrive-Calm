@@ -1,4 +1,4 @@
-.. title:: Calm Linux – Applications Deep Dive
+.. title:: My Applications Deep Dive
 
 .. toctree::
   :maxdepth: 2
@@ -14,9 +14,9 @@
   :name: _appendix
   :hidden:
 
----------------------------------------
-Calm - Applications Deep Dive
----------------------------------------
+-------------------------
+My Applications Deep Dive
+-------------------------
 
 *The estimated time to complete this lab is 60 minutes.*
 
