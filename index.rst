@@ -2,7 +2,7 @@
 
 .. toctree::
   :maxdepth: 2
-  :caption: Calm
+  :caption: My Applications
   :name: _calm
   :hidden:
 
